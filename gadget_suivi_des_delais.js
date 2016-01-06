@@ -129,6 +129,14 @@
 					console.log("Actual workload for week " + week + ": " + (cumulatedWorkload / 3600));
 				}
 				
+				// Ajout de la charge pour les semaines jusqu'à aujourd'hui le cas échéant
+				var currentWeek = getWeekNumber(new Date());
+				if (dates.length > 0 && currentWeek >= dates[0]) {
+					while (currentWeek > dates[Math.max(0, workloadReal.length-1)]) {
+						workloadReal.push(cumulatedWorkload / 3600);
+					}
+				}
+				
 				for (var i=0; i < dates.length; i++) {
 					var weekno = dates[i] % 100
 					dates[i] = "S" + weekno;
