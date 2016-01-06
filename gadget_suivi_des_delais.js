@@ -117,7 +117,7 @@
 				}
 				
 				for (var i=0; i < dates.length; i++) {
-					dates[i] = "S" + dates[i];
+					dates[i] = "S" + dates[i].slice(4);
 				}
 				
 				var chartData = {
