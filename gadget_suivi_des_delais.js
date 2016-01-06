@@ -74,7 +74,7 @@
 						dates.push(week);
 						workloadExpected.push(cumulatedWorkload / 3600);
 					}
-					console.log("Workload: " + (cumulatedWorkload / 3600));
+					console.log("Expected workload for week " + week + ": " + (cumulatedWorkload / 3600));
 				}
 				
 				// Ajout de la charge totale en cible
@@ -111,6 +111,8 @@
 						}
 						workloadReal.push(cumulatedWorkload / 3600);
 					}
+					
+					console.log("Actual workload for week " + week + ": " + (cumulatedWorkload / 3600));
 				}
 				
 				for (var i=0; i < dates.length; i++) {
