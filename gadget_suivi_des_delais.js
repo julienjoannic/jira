@@ -14,7 +14,7 @@
 	
 	function getWeekNumber(date) {
 		// Copy date so don't modify original
-		d = new Date(+date);
+		var d = new Date(+date);
 		d.setHours(0,0,0);
 		// Set to nearest Thursday: current date + 4 - current day number
 		// Make Sunday's day number 7
