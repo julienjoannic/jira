@@ -45,6 +45,7 @@
 				var workloadExpected = [];
 				var workloadReal = [];
 				var workloadTarget = [];
+				var workloadEntered = [];
 				var size;
 				
 				console.log("API call executed, " + data.total + " issue(s) found");
@@ -52,6 +53,7 @@
 				// Calcul de la charge théorique
 				var issues = data.issues;
 				var cumulatedWorkload = 0;
+				var cumulatedWorkloadEntered = 0;
 				issues.sort(function(a, b) { return getDate(a, plannedStartDateField).getTime() - getDate(b, plannedStartDateField).getTime(); });
 				for (var i=0; i < data.total; i++) {
 					var issue = data.issues[i];
@@ -61,9 +63,11 @@
 					}
 					
 					cumulatedWorkload += issue.fields.timeestimate;
+					cumulatedWorkloadEntered += issue.fields.timespent;
 					var week = getWeekNumber(issueEnd);
 					if (dates.length > 0 && dates.slice(-1)[0] == week) {
 						workloadExpected[workloadExpected.length-1] = cumulatedWorkload / 3600;
+						workloadEntered[workloadEntered.length-1] = cumulatedWorkloadEntered / 3600;
 					}
 					else {
 						while (dates.length > 0 && dates.slice(-1)[0] < (week-1)) {
@@ -71,11 +75,14 @@
 							getWeekNumber(issueEnd); // To buffer week dates
 							dates.push(dates.slice(-1)[0] + 1);
 							workloadExpected.push(workloadExpected.slice(-1)[0]);
+							workloadEntered.push(workloadEntered.slice(-1)[0]);
 						}
 						dates.push(week);
 						workloadExpected.push(cumulatedWorkload / 3600);
+						workloadEntered.push(cumulatedWorkloadEntered / 3600);
 					}
 					console.log("Expected workload for week " + week + ": " + (cumulatedWorkload / 3600));
+					console.log("Entered workload for week " + week + ": " + (cumulatedWorkloadEntered / 3600));
 				}
 				
 				// Ajout de la charge totale en cible
@@ -139,6 +146,14 @@
 							pointColor: 'rgba(220,220,220,1)',
 							pointStrokeColor: 'rgba(220,220,220,1)',
 							data: workloadExpected
+						},
+						{
+							label: "Temps saisi (régie)",
+							fillColor: "rgba(110,44,159,0)",
+							strokeColor: "rgba(110,44,159,1)",
+							pointColor: 'rgba(110,44,159,1)',
+							pointStrokeColor: 'rgba(110,44,159,1)',
+							data: workloadEntered
 						},
 						{
 							label: "Budget des tâches terminées",
