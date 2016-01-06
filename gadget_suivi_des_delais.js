@@ -117,6 +117,7 @@
 				}
 				
 				for (var i=0; i < dates.length; i++) {
+					console.log("Dates[" + i + "]: " + dates[i] + " = S" + dates[i].slice(4));
 					dates[i] = "S" + dates[i].slice(4);
 				}
 				
@@ -127,16 +128,16 @@
 							label: "Budget total du projet",
 							fillColor: "rgba(0,173,239,0)",
 							strokeColor: "rgba(0,173,239,1)",
-							pointColor: 'rgba(0,173,239,0)',
-							pointStrokeColor: 'rgba(0,173,239,0)',
+							pointColor: 'rgba(0,173,239,1)',
+							pointStrokeColor: 'rgba(0,173,239,1)',
 							data: workloadTarget
 						},
 						{
 							label: "Budget des tâches planifiées",
 							fillColor: "rgba(220,220,220,0.2)",
 							strokeColor: "rgba(220,220,220,1)",
-							pointColor: 'rgba(220,220,220,0)',
-							pointStrokeColor: 'rgba(220,220,220,0)',
+							pointColor: 'rgba(220,220,220,1)',
+							pointStrokeColor: 'rgba(220,220,220,1)',
 							data: workloadExpected
 						},
 						{
