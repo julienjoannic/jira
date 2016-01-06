@@ -16,7 +16,10 @@
 		console.log("Calculating week number for date " + date.toISOString().substr(0, 10));
 		// Copy date so don't modify original
 		var d = new Date(+date);
-		d.setHours(0,0,0);
+		d.setHours(0);
+		d.setMinutes(0);
+		d.setSeconds(0);
+		d.setMilliseconds(0);
 		// Set to nearest Thursday: current date + 4 - current day number
 		// Make Sunday's day number 7
 		d.setDate(d.getDate() + 4 - (d.getDay()||7));
