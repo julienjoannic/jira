@@ -23,7 +23,7 @@
 		// Get first day of year
 		var year = d.getFullYear()
 		var yearStart = new Date(year,0,1);
-		console.log("Reference date is " + d.toISOString().substr(0, 10) + ", year start is " + yearStart.toISOString().substr(0, 10) + " (diff = " + ((d - yearStart) / 86400000)) + ")");
+		console.log("Reference date is " + d.toISOString().substr(0, 10) + ", year start is " + yearStart.toISOString().substr(0, 10) + " (diff = " + ((d - yearStart) / 86400000) + ")");
 		// Calculate full weeks to nearest Thursday
 		var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
 		
