@@ -20,6 +20,7 @@
 		// Make Sunday's day number 7
 		d.setDate(d.getDate() + 4 - (d.getDay()||7));
 		// Get first day of year
+		var year = d.getFullYear()
 		var yearStart = new Date(d.getFullYear(),0,1);
 		// Calculate full weeks to nearest Thursday
 		var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
@@ -31,7 +32,7 @@
 		weekDates["S"+weekNo] = { start: weekStart, end: weekEnd };
 		
 		// Return array of year and week number
-		return weekNo;
+		return year * 100 + weekNo;
 	}
 
 	$(document).ready(function() {
@@ -126,8 +127,8 @@
 							label: "Budget total du projet",
 							fillColor: "rgba(0,173,239,0)",
 							strokeColor: "rgba(0,173,239,1)",
-							pointColor: 'rgba(220,220,220,0)',
-							pointStrokeColor: 'rgba(220,220,220,0)',
+							pointColor: 'rgba(0,173,239,0)',
+							pointStrokeColor: 'rgba(0,173,239,0)',
 							data: workloadTarget
 						},
 						{
