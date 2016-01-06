@@ -30,6 +30,7 @@
 		var weekEnd = new Date(+d);
 		weekEnd.setDate(d.getDate() + 2);
 		weekDates["S"+weekNo] = { start: weekStart, end: weekEnd };
+		console.log("Week s" + weekNo + " is between " + weekStart.toISOString().substr(0, 10) + " and " + weekEnd.toISOString().substr(0, 10) + " (calculated from date " + d.toISOString().substr(0, 10) + ")");
 		
 		// Return array of year and week number
 		return year * 100 + weekNo;
