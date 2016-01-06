@@ -12,9 +12,9 @@
 		return date.toLocaleDateString();
 	}
 	
-	function getWeekNumber(d) {
+	function getWeekNumber(date) {
 		// Copy date so don't modify original
-		d = new Date(+d);
+		d = new Date(+date);
 		d.setHours(0,0,0);
 		// Set to nearest Thursday: current date + 4 - current day number
 		// Make Sunday's day number 7
@@ -30,7 +30,7 @@
 		var weekEnd = new Date(+d);
 		weekEnd.setDate(d.getDate() + 2);
 		weekDates["S"+weekNo] = { start: weekStart, end: weekEnd };
-		console.log("Week s" + weekNo + " is between " + weekStart.toISOString().substr(0, 10) + " and " + weekEnd.toISOString().substr(0, 10) + " (calculated from date " + d.toISOString().substr(0, 10) + ")");
+		console.log("Week s" + weekNo + " is between " + weekStart.toISOString().substr(0, 10) + " and " + weekEnd.toISOString().substr(0, 10) + " (calculated from date " + date.toISOString().substr(0, 10) + ")");
 		
 		// Return array of year and week number
 		return year * 100 + weekNo;
@@ -133,7 +133,7 @@
 				// Ajout de la charge pour les semaines jusqu'à aujourd'hui le cas échéant
 				var currentWeek = getWeekNumber(new Date());
 				if (dates.length > 0 && currentWeek >= dates[0]) {
-					while (currentWeek >= dates[Math.max(0, workloadReal.length-1)]) {
+					while (currentWeek >= dates[workloadReal.length]) {
 						workloadReal.push(cumulatedWorkload / 3600);
 						console.log("Adding extra data point for Actual Workload for week " + dates[workloadReal.length-1]);
 					}
