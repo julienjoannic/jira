@@ -1,6 +1,6 @@
 (function($) {
 	var maxEndDate = new Date("9999-12-31");
-	var plannedStartDateField = "customfield_10051";
+	var plannedEndDateField = "customfield_10051";
 	var realEndDateField = "customfield_11186";
 	var weekDates = [];
 	
@@ -13,6 +13,7 @@
 	}
 	
 	function getWeekNumber(date) {
+		console.log("Calculating week number for date " + date.toISOString().substr(0, 10));
 		// Copy date so don't modify original
 		var d = new Date(+date);
 		d.setHours(0,0,0);
@@ -56,10 +57,10 @@
 				var issues = data.issues;
 				var cumulatedWorkload = 0;
 				var cumulatedWorkloadEntered = 0;
-				issues.sort(function(a, b) { return getDate(a, plannedStartDateField).getTime() - getDate(b, plannedStartDateField).getTime(); });
+				issues.sort(function(a, b) { return getDate(a, plannedEndDateField).getTime() - getDate(b, plannedEndDateField).getTime(); });
 				for (var i=0; i < data.total; i++) {
 					var issue = data.issues[i];
-					var issueEnd = getDate(issue, plannedStartDateField)
+					var issueEnd = getDate(issue, plannedEndDateField)
 					if (issueEnd.getTime() == maxEndDate.getTime()) {
 						break;
 					}
