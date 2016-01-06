@@ -133,8 +133,9 @@
 				// Ajout de la charge pour les semaines jusqu'à aujourd'hui le cas échéant
 				var currentWeek = getWeekNumber(new Date());
 				if (dates.length > 0 && currentWeek >= dates[0]) {
-					while (currentWeek > dates[Math.max(0, workloadReal.length-1)]) {
+					while (currentWeek >= dates[Math.max(0, workloadReal.length-1)]) {
 						workloadReal.push(cumulatedWorkload / 3600);
+						console.log("Adding extra data point for Actual Workload for week " + dates[workloadReal.length-1]);
 					}
 				}
 				
