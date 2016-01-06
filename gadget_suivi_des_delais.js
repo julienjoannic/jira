@@ -85,6 +85,12 @@
 					console.log("Entered workload for week " + week + ": " + (cumulatedWorkloadEntered / 3600));
 				}
 				
+				// Suppression des toutes les entrées inutile pour la charge saisie
+				while (workloadEntered.length >= 2 && workloadEntered.splice(-1)[0] == workloadEntered.splice(-2)[0]) {
+					console.log("Removing useless Workload Entered entry for week " + dates[workloadEntered.length - 1]);
+					workloadEntered = workloadEntered.splice(0, workloadEntered.length-2);
+				}
+				
 				// Ajout de la charge totale en cible
 				while (workloadTarget.length < dates.length) {
 					workloadTarget.push(cumulatedWorkload / 3600);
@@ -148,14 +154,6 @@
 							data: workloadExpected
 						},
 						{
-							label: "Temps saisi (régie)",
-							fillColor: "rgba(110,44,159,0)",
-							strokeColor: "rgba(110,44,159,1)",
-							pointColor: 'rgba(110,44,159,1)',
-							pointStrokeColor: 'rgba(110,44,159,1)',
-							data: workloadEntered
-						},
-						{
 							label: "Budget des tâches terminées",
 							fillColor: "rgba(232,159,69,0.2)",
 							strokeColor: "rgba(232,159,69,1)",
@@ -165,6 +163,22 @@
 						}
 					]
 				};
+				
+				if (workloadEntered.splice(-1)[0] > 0) {
+					chartData.datasets.push(
+						{
+							label: "Temps saisi (régie)",
+							fillColor: "rgba(110,44,159,0)",
+							strokeColor: "rgba(110,44,159,1)",
+							pointColor: 'rgba(110,44,159,1)',
+							pointStrokeColor: 'rgba(110,44,159,1)',
+							data: workloadEntered
+						}
+					);
+				}
+				else {
+					console.log("No workload data entered");
+				}
 				
 				var chartOptions = {
 					animation: false,
