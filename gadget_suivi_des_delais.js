@@ -117,7 +117,8 @@
 				}
 				
 				for (var i=0; i < dates.length; i++) {
-					dates[i] = "S" + dates[i].toString().slice(4);
+					var weekno = dates[i] % 100
+					dates[i] = "S" + weekno;
 				}
 				
 				var chartData = {
