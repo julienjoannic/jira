@@ -1,7 +1,7 @@
 (function($) {
 	var maxEndDate = new Date("9999-12-31");
 	var plannedStartDateField = "customfield_10051";
-	var realEndDateField = "customfield_10160";
+	var realEndDateField = "customfield_11186";
 	var weekDates = [];
 	
 	function getDate(issue, date) {
