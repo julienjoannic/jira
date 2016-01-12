@@ -145,7 +145,9 @@
 				}
 				
 				var spi = workloadReal[workloadReal.length-1] / workloadExpected[workloadReal.length-1]
+				console.log("SPI is " + spi);
 				var cpi = workloadReal[workloadEntered.length-1] / workloadEntered[workloadEntered.length-1]
+				console.log("CPI is " + spi);
 				
 				for (var i=0; i < dates.length; i++) {
 					var weekno = dates[i] % 100
@@ -183,7 +185,7 @@
 				};
 				
 				
-				$("#spi.span").text(spi);
+				$("#spi span").text(spi);
 				if (workloadEntered.splice(-1)[0] > 0) {
 					chartData.datasets.push(
 						{
@@ -195,7 +197,7 @@
 							data: workloadEntered
 						}
 					);
-					$("#cpi.span").text(cpi);
+					$("#cpi span").text(cpi);
 				}
 				else {
 					console.log("No workload data entered");
