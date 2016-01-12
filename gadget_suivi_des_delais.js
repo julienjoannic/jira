@@ -144,6 +144,9 @@
 					}
 				}
 				
+				var spi = workloadReal[workloadReal.length-1] / workloadExpected[workloadReal.length-1]
+				var cpi = workloadReal[workloadEntered.length-1] / workloadEntered[workloadEntered.length-1]
+				
 				for (var i=0; i < dates.length; i++) {
 					var weekno = dates[i] % 100
 					dates[i] = "S" + weekno;
@@ -179,6 +182,8 @@
 					]
 				};
 				
+				
+				$("#spi.span").text(spi);
 				if (workloadEntered.splice(-1)[0] > 0) {
 					chartData.datasets.push(
 						{
@@ -190,6 +195,7 @@
 							data: workloadEntered
 						}
 					);
+					$("#cpi.span").text(cpi);
 				}
 				else {
 					console.log("No workload data entered");
