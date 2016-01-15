@@ -72,8 +72,8 @@
 					cumulatedWorkloadEntered += issue.fields.timespent;
 					var week = getWeekNumber(issueEnd);
 					if (dates.length > 0 && dates.slice(-1)[0] == week) {
-						workloadExpected[workloadExpected.length-1] = cumulatedWorkload / 3600;
-						workloadEntered[workloadEntered.length-1] = cumulatedWorkloadEntered / 3600;
+						workloadExpected[workloadExpected.length-1] = Math.round(cumulatedWorkload / 3600);
+						workloadEntered[workloadEntered.length-1] = Math.round(cumulatedWorkloadEntered / 3600);
 					}
 					else {
 						while (dates.length > 0 && dates.slice(-1)[0] < (week-1)) {
@@ -84,11 +84,11 @@
 							workloadEntered.push(workloadEntered.slice(-1)[0]);
 						}
 						dates.push(week);
-						workloadExpected.push(cumulatedWorkload / 3600);
-						workloadEntered.push(cumulatedWorkloadEntered / 3600);
+						workloadExpected.push(Math.round(cumulatedWorkload / 3600));
+						workloadEntered.push(Math.round(cumulatedWorkloadEntered / 3600));
 					}
-					console.log("Expected workload for week " + week + ": " + (cumulatedWorkload / 3600));
-					console.log("Entered workload for week " + week + ": " + (cumulatedWorkloadEntered / 3600));
+					console.log("Expected workload for week " + week + ": " + Math.round(cumulatedWorkload / 3600));
+					console.log("Entered workload for week " + week + ": " + Math.round(cumulatedWorkloadEntered / 3600));
 				}
 				
 				// Suppression des toutes les entrées inutile pour la charge saisie
@@ -99,7 +99,7 @@
 				
 				// Ajout de la charge totale en cible
 				while (workloadTarget.length < dates.length) {
-					workloadTarget.push(cumulatedWorkload / 3600);
+					workloadTarget.push(Math.round(cumulatedWorkload / 3600));
 				}
 				
 				// Calcul de la charge réelle
@@ -119,7 +119,7 @@
 					
 					cumulatedWorkload += issue.fields.timeestimate;
 					if (workloadReal.length > 0 && dates[workloadReal.length-1] == week) {
-						workloadReal[workloadReal.length-1] = cumulatedWorkload / 3600;
+						workloadReal[workloadReal.length-1] = Math.round(cumulatedWorkload / 3600);
 					}
 					else {
 						if (workloadReal.length == 0 && dates[0] < week) {
@@ -129,17 +129,17 @@
 						while (workloadReal.length > 0 && dates[workloadReal.length-1] < (week-1))	{
 							workloadReal.push(workloadReal.slice(-1)[0]);
 						}
-						workloadReal.push(cumulatedWorkload / 3600);
+						workloadReal.push(Math.round(cumulatedWorkload / 3600));
 					}
 					
-					console.log("Actual workload for week " + week + ": " + (cumulatedWorkload / 3600));
+					console.log("Actual workload for week " + week + ": " + Math.round(cumulatedWorkload / 3600));
 				}
 				
 				// Ajout de la charge pour les semaines jusqu'à aujourd'hui le cas échéant
 				var currentWeek = getWeekNumber(new Date());
 				if (dates.length > 0 && currentWeek >= dates[0]) {
 					while (currentWeek >= dates[workloadReal.length]) {
-						workloadReal.push(cumulatedWorkload / 3600);
+						workloadReal.push(Math.round(cumulatedWorkload / 3600));
 						console.log("Adding extra data point for Actual Workload for week " + dates[workloadReal.length-1]);
 					}
 				}
