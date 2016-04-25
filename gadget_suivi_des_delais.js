@@ -44,7 +44,7 @@
 	$(document).ready(function() {
 		console.log("ready()");
 		$.ajax({
-			url: "/rest/api/latest/search?jql=project%20%3D%20currentProject()%20AND%20issuetype%20%3D%20Tâche%20AND%20fixVersion%20%3D%20earliestUnreleasedVersion()",
+			url: "/rest/api/latest/search?jql=project%20%3D%20currentProject()%20and%20issueType%20%3D%20Tâche%20and%20(fixVersion%20%3D%20earliestUnreleasedVersion()%20or%20fixVersion%20is%20empty)",
 			contentType: "application/json",
 			success: function(data) {
 				var dates = [];
