@@ -63,6 +63,10 @@
 				issues.sort(function(a, b) { return getDate(a, plannedEndDateField).getTime() - getDate(b, plannedEndDateField).getTime(); });
 				for (var i=0; i < data.total; i++) {
 					var issue = data.issues[i];
+					if (issue === null) {
+						break;
+					}
+					
 					var issueEnd = getDate(issue, plannedEndDateField)
 					if (issueEnd.getTime() == maxEndDate.getTime()) {
 						break;
