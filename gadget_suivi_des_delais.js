@@ -3,15 +3,15 @@
 	var plannedEndDateField = "customfield_10051";
 	var realEndDateField = "customfield_11186";
 	var weekDates = [];
-	
+
 	function getDate(issue, date) {
 		return (issue.fields[date] == null) ? maxEndDate : new Date(issue.fields[date]);
 	}
-	
+
 	function dateToString(date) {
 		return date.toLocaleDateString();
 	}
-	
+
 	function getWeekNumber(date) {
 		console.log("Calculating week number for date " + date.toISOString().substr(0, 10));
 		// Copy date so don't modify original
@@ -29,14 +29,14 @@
 		console.log("Reference date is " + d.toISOString().substr(0, 10) + ", year start is " + yearStart.toISOString().substr(0, 10) + " (diff = " + ((d - yearStart) / 86400000) + ")");
 		// Calculate full weeks to nearest Thursday
 		var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
-		
+
 		var weekStart = new Date(+d);
 		weekStart.setDate(d.getDate() - 4);
 		var weekEnd = new Date(+d);
 		weekEnd.setDate(d.getDate() + 2);
 		weekDates["S"+weekNo] = { start: weekStart, end: weekEnd };
 		console.log("Week s" + weekNo + " is between " + weekStart.toISOString().substr(0, 10) + " and " + weekEnd.toISOString().substr(0, 10) + " (calculated from date " + date.toISOString().substr(0, 10) + ")");
-		
+
 		// Return array of year and week number
 		return year * 100 + weekNo;
 	}
@@ -53,9 +53,9 @@
 				var workloadTarget = [];
 				var workloadEntered = [];
 				var size;
-				
+
 				console.log("API call executed, " + data.total + " issue(s) found");
-				
+
 				// Calcul de la charge théorique
 				var issues = data.issues;
 				var cumulatedWorkload = 0;
@@ -66,12 +66,12 @@
 					if (!issue) {
 						break;
 					}
-					
+
 					var issueEnd = getDate(issue, plannedEndDateField)
 					if (issueEnd.getTime() == maxEndDate.getTime()) {
 						break;
 					}
-					
+
 					cumulatedWorkload += issue.fields.timeestimate;
 					cumulatedWorkloadEntered += issue.fields.timespent;
 					var week = getWeekNumber(issueEnd);
@@ -94,18 +94,18 @@
 					console.log("Expected workload for week " + week + ": " + Math.round(cumulatedWorkload / 3600));
 					console.log("Entered workload for week " + week + ": " + Math.round(cumulatedWorkloadEntered / 3600));
 				}
-				
+
 				// Suppression des toutes les entrées inutile pour la charge saisie
 				while (workloadEntered.length >= 2 && workloadEntered.splice(-1)[0] == workloadEntered.splice(-2)[0]) {
 					console.log("Removing useless Workload Entered entry for week " + dates[workloadEntered.length - 1]);
 					workloadEntered = workloadEntered.splice(0, workloadEntered.length-2);
 				}
-				
+
 				// Ajout de la charge totale en cible
 				while (workloadTarget.length < dates.length) {
 					workloadTarget.push(Math.round(cumulatedWorkload / 3600));
 				}
-				
+
 				// Calcul de la charge réelle
 				cumulatedWorkload = 0;
 				issues.sort(function(a, b) { return getDate(a, realEndDateField).getTime() - getDate(b, realEndDateField).getTime(); });
@@ -115,12 +115,12 @@
 					if (issueRealEnd.getTime() == maxEndDate.getTime()) {
 						break;
 					}
-					
+
 					var week = getWeekNumber(issueRealEnd);
 					if (week < dates[0]) {
 						continue;
 					}
-					
+
 					cumulatedWorkload += issue.fields.timeestimate;
 					if (workloadReal.length > 0 && dates[workloadReal.length-1] == week) {
 						workloadReal[workloadReal.length-1] = Math.round(cumulatedWorkload / 3600);
@@ -129,16 +129,16 @@
 						if (workloadReal.length == 0 && dates[0] < week) {
 							workloadReal.push(0);
 						}
-						
+
 						while (workloadReal.length > 0 && dates[workloadReal.length-1] < (week-1))	{
 							workloadReal.push(workloadReal.slice(-1)[0]);
 						}
 						workloadReal.push(Math.round(cumulatedWorkload / 3600));
 					}
-					
+
 					console.log("Actual workload for week " + week + ": " + Math.round(cumulatedWorkload / 3600));
 				}
-				
+
 				// Ajout de la charge pour les semaines jusqu'à aujourd'hui le cas échéant
 				var currentWeek = getWeekNumber(new Date());
 				if (dates.length > 0 && currentWeek >= dates[0]) {
@@ -147,15 +147,15 @@
 						console.log("Adding extra data point for Actual Workload for week " + dates[workloadReal.length-1]);
 					}
 				}
-				
+
 				var spi = workloadReal[workloadReal.length-1] / workloadExpected[workloadReal.length-1]
 				console.log("SPI is " + spi.toFixed(2));
-				
+
 				for (var i=0; i < dates.length; i++) {
 					var weekno = dates[i] % 100
 					dates[i] = "S" + weekno;
 				}
-				
+
 				var chartData = {
 					labels: dates,
 					datasets: [
@@ -185,8 +185,8 @@
 						}
 					]
 				};
-				
-				
+
+
 				$("#spi #value").text(spi.toFixed(2));
 				$("#spi #icon").css("background-color", (spi < 0.8) ? "red" : ((spi < 0.95) ? "orange" : "green"));
 				if (workloadEntered.splice(-1)[0] > 0) {
@@ -209,7 +209,7 @@
 				else {
 					console.log("No workload data entered");
 				}
-				
+
 				var chartOptions = {
 					animation: false,
 					pointDot: true,
@@ -217,14 +217,14 @@
 					bezierCurve: false,
 					legendTemplate : "<ul style=\"list-style-type: none\"><% for (var i=0; i<datasets.length; i++){%><li style=\"display: inline-block\"><div style=\"margin: 0px 10px; display: inline-block; width: 10px; height: 10px; background-color:<%=datasets[i].strokeColor%>\" /><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
 				};
-				
+
 				$("#chart").width($(window).width());
 				$("#chart").height(300);
-				
+
 				var ctx = $("#chart").get(0).getContext("2d");
-				var myLineChart = new Chart(ctx).Line(chartData, chartOptions);
+				var myLineChart = Chart.Line(ctx, { data: chartData, options: chartOptions });
 				$("#legend").append(myLineChart.generateLegend());
-				
+
 				$("#chart").on("click", function(event) {
 					var activePoints = myLineChart.getPointsAtEvent(event);
 					var week = activePoints[0].label;
