@@ -217,12 +217,12 @@
 					bezierCurve: false,
 					legendTemplate : "<ul style=\"list-style-type: none\"><% for (var i=0; i<datasets.length; i++){%><li style=\"display: inline-block\"><div style=\"margin: 0px 10px; display: inline-block; width: 10px; height: 10px; background-color:<%=datasets[i].strokeColor%>\" /><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
 				};
-
+				
 				$("#chart").width($(window).width());
 				$("#chart").height(300);
 
 				var ctx = $("#chart").get(0).getContext("2d");
-				var myLineChart = Chart.Line(ctx, { data: chartData, options: chartOptions });
+				var myLineChart = new Chart(ctx).Line(chartData, chartOptions);
 				$("#legend").append(myLineChart.generateLegend());
 
 				$("#chart").on("click", function(event) {
