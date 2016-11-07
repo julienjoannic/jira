@@ -1,7 +1,9 @@
 AJS.$(document).ready(function($){
-	new AJS.MultiSelect({
-		element: AJS.$("#customfield_11483"),
-		itemAttrDisplayed: "label",
-		errorMessage: AJS.params.multiselectComponentsError
-	});
+	JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e,context) {
+		new AJS.MultiSelect({
+			element: AJS.$("#customfield_11483"),
+			itemAttrDisplayed: "label",
+			errorMessage: AJS.params.multiselectComponentsError
+		});
+    });
 });
