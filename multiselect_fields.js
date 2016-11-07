@@ -1,15 +1,21 @@
 AJS.$(document).ready(function($){
 	JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e,context) {
-		configureMultiSelect();
+		configureAllMultiSelects();
     });
 	
-	function configureMultiSelect() {
+	function configureMultiSelect(fieldId) {
 		new AJS.MultiSelect({
-			element: AJS.$("#customfield_11483"),
+			element: AJS.$("#" + fieldId),
 			itemAttrDisplayed: "label",
 			errorMessage: AJS.params.multiselectComponentsError
 		});
 	}
 	
-	configureMultiSelect();
+	function configureAllMultiSelects() {
+		configureMultiSelect("customfield_11482");
+		configureMultiSelect("customfield_11281");
+		configureMultiSelect("customfield_11483");
+	}
+	
+	configureAllMultiSelects();
 });
