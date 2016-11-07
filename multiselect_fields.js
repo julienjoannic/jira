@@ -10,4 +10,6 @@ AJS.$(document).ready(function($){
 			errorMessage: AJS.params.multiselectComponentsError
 		});
 	}
+	
+	configureMultiSelect();
 });
