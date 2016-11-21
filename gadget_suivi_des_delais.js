@@ -80,7 +80,7 @@
 						workloadEntered[workloadEntered.length-1] = Math.round(cumulatedWorkloadEntered / 3600);
 					}
 					else {
-						while (dates.length > 0 && dates.slice(-1)[0] < (week-1)) {
+						while (dates.length > 0 && dates.slice(-1)[0] < (week-1) && (dates.slice(-1)[0] % 100 < 52)) {
 							issueEnd.setDate(issueEnd.getDate() + 7);
 							getWeekNumber(issueEnd); // To buffer week dates
 							dates.push(dates.slice(-1)[0] + 1);
