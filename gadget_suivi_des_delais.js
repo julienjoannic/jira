@@ -231,8 +231,8 @@
 					var weekDate = weekDates[week];
 					var query = "project = currentProject() " +
 								"AND issuetype=Tâche " +
-								"AND ( ( \"Date de fin previsionnelle\" >= " + weekDate.start.toISOString().substr(0, 10) + " " +
-								"        AND \"Date de fin previsionnelle\" <= " + weekDate.end.toISOString().substr(0, 10) + " ) " +
+								"AND ( ( \"Date de fin prévisionnelle\" >= " + weekDate.start.toISOString().substr(0, 10) + " " +
+								"        AND \"Date de fin prévisionnelle\" <= " + weekDate.end.toISOString().substr(0, 10) + " ) " +
 								"   OR ( \"Date de fin réelle\" >= " + weekDate.start.toISOString().substr(0, 10) + " " +
 								"        AND \"Date de fin réelle\" <= " + weekDate.end.toISOString().substr(0, 10) + " ) )";
 					//var url = "/issues/?jql=project%20%3D%20currentProject()%20AND%20issuetype%20%3D%20T%C3%A2che%20AND%20%22Date%20de%20fin%20previsionnelle%22%20%3E%3D%20" + weekDate.start.toISOString().substr(0, 10) + "%20AND%20%22Date%20de%20fin%20previsionnelle%22%20%3C%3D%20" + weekDate.end.toISOString().substr(0, 10);
