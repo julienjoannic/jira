@@ -13,10 +13,8 @@ AJS.$(document).ready(function($){
 		configureMultiSelect("customfield_11483");
 	}
 	
-	function configureFields() {
-		configureAllMultiSelects();
-		
-		var field = AJS.$("#customfield_12080");
+	function configureSelect2(fieldId) {
+		var field = AJS.$(fieldId);
 		if (field.auiSelect2) {
 			field.auiSelect2({
 				placeholder: "Composant SAP",
@@ -46,6 +44,13 @@ AJS.$(document).ready(function($){
 				escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
 			});
 		}
+	}
+	
+	function configureFields() {
+		configureAllMultiSelects();
+		
+		configureSelect2("#customfield_12080");
+		configureSelect2("#customfield_11787");
 	}
 	
 	JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e,context) {
