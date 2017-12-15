@@ -49,8 +49,12 @@ AJS.$(document).ready(function($){
 	function configureFields() {
 		configureAllMultiSelects();
 		
-		configureSelect2("#customfield_12080");
-		configureSelect2("#customfield_11787");
+		if (window.location.href.indexOf("-dev") > -1) {
+			configureSelect2("#customfield_12080");
+		}
+		else {
+			configureSelect2("#customfield_11787");
+		}
 	}
 	
 	JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e,context) {
