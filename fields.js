@@ -50,7 +50,7 @@ AJS.$(document).ready(function($){
 		configureAllMultiSelects();
 		
 		if (window.location.href.indexOf("-dev") > -1) {
-			configureSelect2("#customfield_12080");
+			configureSelect2("#customfield_11787");
 		}
 		else {
 			configureSelect2("#customfield_11787");
