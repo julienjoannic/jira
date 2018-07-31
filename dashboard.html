@@ -1,0 +1,245 @@
+<html>
+	<head>
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+	</head>
+	<body style="padding: 10px">
+		<script id="epic-table" type="text/x-handlebars-template">
+			<colgroup>
+			   <col span="1" style="width: 50%;">
+			   <col span="1" style="width: 10%;">
+			   <col span="1" style="width: 15%;">
+			   <col span="1" style="width: 15%;">
+			</colgroup>
+			<thead>
+				<tr>
+					<th>Processus</th>
+					<th>Equipe</th>
+					<th>Avancement</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each epics}}
+					{{#if (lookup this.versions ../version)}}
+						<tr>
+							<td>{{fields.summary}}</td>
+							<td>{{fields.components.0.name}}</td>
+							<td style="font-size: 0.7em; padding: 5px">
+								{{#with (lookup this.versions ../version)}}
+									<div class="row" style="margin-bottom: 0px">
+										<div class="col s6">{{storyPoints.progress}}%</div>
+										<div class="col s6 right-align">{{storyPoints.completed}} / {{storyPoints.total}} SP</div>
+									</div>
+									<div class="progress" style="margin: 1px 0px 0px 0px"> 
+										<div class="determinate" style="width: {{storyPoints.progress}}%"></div>
+									</div>
+									<div class="progress" style="margin: 5px 0px 0px 0px; background-color: SkyBlue">
+										<div class="determinate" style="width: {{workHours.progress}}%; background-color: DodgerBlue"></div>
+									</div>
+									<div class="row" style="margin-bottom: 0px">
+										<div class="col s6">{{workHours.progress}}%</div>
+										<div class="col s6 right-align">{{workHours.completed}} / {{workHours.total}}h</div>
+									</div>
+								{{/with}}
+							</td>
+						</tr>
+					{{/if}}
+				{{/each}}
+			</tbody>
+		</script>
+		
+		<script id="version-details" type="text/x-handlebars-template">
+			<div class="row" style="margin-bottom: 0px">
+				<div class="col s6">{{storyPoints.progress}}%</div>
+				<div class="col s6 right-align">{{storyPoints.completed}} / {{storyPoints.total}} SP</div>
+			</div>
+			<div class="progress" style="margin: 1px 0px 0px 0px"> 
+				<div class="determinate" style="width: {{storyPoints.progress}}%"></div>
+			</div>
+			<div class="progress" style="margin: 5px 0px 0px 0px; background-color: SkyBlue">
+				<div class="determinate" style="width: {{workHours.progress}}%; background-color: DodgerBlue"></div>
+			</div>
+			<div class="row" style="margin-bottom: 0px">
+				<div class="col s6">{{workHours.progress}}%</div>
+				<div class="col s6 right-align">{{workHours.completed}} / {{workHours.total}}h</div>
+			</div>
+		</script>
+		
+		<script id="teams" type="text/x-handlebars-template">
+			<option value="ALL">Toutes</option>
+			{{#each teams}}
+				<option value="{{this}}">{{this}}</option>
+			{{/each}}
+		</script>
+	
+		<div class="col s12">
+			<div class="row">
+				<div class="input-field col s2">
+					<select id="version">
+					</select>
+					<label>Version</label>
+				</div>
+				<div class="input-field col s2">
+					<select id="team">
+						<option value="ALL">Toutes</option>
+					</select>
+					<label>Equipe</label>
+				</div>
+				<div id="version-details" class="col s8">
+					<div class="preloader-wrapper small active">
+						<div class="spinner-layer spinner-green-only">
+							<div class="circle-clipper left">
+								<div class="circle"></div>
+							</div>
+							<div class="gap-patch">
+								<div class="circle"></div>
+							</div>
+							<div class="circle-clipper right">
+								<div class="circle"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<table id="epic-table" class="striped">
+			</table>
+		</div>
+	
+		<script type="text/javascript">
+			const OPTIONS = { auth: { username: 's2h3c2', password: 'Monmdp@25' }};
+			var epics;
+			var versions = {};
+			var renderEpicTable = Handlebars.compile($('script#epic-table').html());
+			var renderVersionDetails = Handlebars.compile($('script#version-details').html());
+			var renderTeams = Handlebars.compile($('script#teams').html());
+			
+			function refresh() {
+				var team = $('#team').val();
+				$('table#epic-table').html(renderEpicTable({ epics: _.filter(epics, function(epic) { return team == 'ALL' || _.find(epic.fields.components, { name: team }) }), version: $('#version').val() }));
+				
+				var version = versions[$('#version').val()];
+				$('div#version-details').html(renderVersionDetails((team == 'ALL' ? version : version.components[team])));
+				
+				$('#team').html(renderTeams({ teams: _.keys(version.components).sort() }));
+				$('#team').val(team);
+				$('#team').formSelect();
+			}
+			
+			$(document).ready(function(){
+				$('.tabs').tabs();
+				$('select').formSelect();
+				$('select').change(function() { refresh() });
+				
+				// Load versions
+				axios.get('http://issuetracker.etat-de-vaud.ch/outils/jira/rest/api/2/project/RIBRAPA/versions', OPTIONS).then(function(response) {
+					var versions = _.sortBy(response.data, ['name']);
+					versions.forEach(function(version) {
+						$('#version').append($('<option>', { value: version.name, text: version.name }));
+					});
+					$('#version').formSelect();
+				});
+				
+				// Load issues
+				axios.get('http://issuetracker.etat-de-vaud.ch/outils/jira/rest/api/2/search?jql=project%20%3D%20RIBRAPA%20AND%20issuetype%20%3D%20Epop%C3%A9e&maxResults=1000', OPTIONS).then(function(response) {
+					epics = _.sortBy(response.data.issues, ['fields.summary']);
+					var requests = [];
+					epics.forEach(function(epic, i, arr) {
+						epics[i].storyCount = 0;
+						epics[i].versions = {};
+						requests.push(axios.get('http://issuetracker.etat-de-vaud.ch/outils/jira/rest/api/2/search?jql=project%20%3D%20RIBRAPA%20AND%20"Lien%20d%27%C3%A9pop%C3%A9e"%20%3D%20'+epic.key, OPTIONS));
+					});
+					
+					axios.all(requests).then(function(results) {
+						results.forEach(function(response, i) {
+							response.data.issues.forEach(function(story) 	{
+								epics[i].storyCount++;
+								
+								// Compute total workload and progress for version
+								fixVersion = story.fields.fixVersions[0];
+								if (fixVersion) {
+									if (!epics[i].versions[fixVersion.name]) {
+										epics[i].versions[fixVersion.name] = {
+											storyPoints: { total: 0, completed: 0, progress: 0 },
+											workHours: { total: 0, completed: 0, progress: 0 },
+											issues: []
+										};
+									}
+									
+									epics[i].versions[fixVersion.name].issues.push(story);
+								
+									if (story.fields.customfield_12022) {
+										epics[i].versions[fixVersion.name].storyPoints.total += story.fields.customfield_12022;
+										if (story.fields.status.statusCategory.id == 3) {
+											epics[i].versions[fixVersion.name].storyPoints.completed += story.fields.customfield_12022;
+										}
+									}
+									if (epics[i].versions[fixVersion.name].storyPoints.total > 0) {
+										epics[i].versions[fixVersion.name].storyPoints.progress = Math.round(epics[i].versions[fixVersion.name].storyPoints.completed * 100 / epics[i].versions[fixVersion.name].storyPoints.total);
+									}
+									
+									epics[i].versions[fixVersion.name].workHours.total += Math.round(story.fields.aggregatetimeestimate / 3600);
+									epics[i].versions[fixVersion.name].workHours.completed += Math.round(story.fields.aggregateprogress.progress / 3600);
+									if (epics[i].versions[fixVersion.name].workHours.total > 0) {
+										epics[i].versions[fixVersion.name].workHours.progress = Math.round(epics[i].versions[fixVersion.name].workHours.completed * 100 / epics[i].versions[fixVersion.name].workHours.total);
+									}
+								}
+							});
+						});
+						
+						// Calcul par version et par team
+						epics.forEach(function(epic) {
+							for (var version in epic.versions) {
+								if (!versions[version]) {
+									versions[version] = _.cloneDeep(epic.versions[version]);
+								}
+								else {
+									versions[version].storyPoints.total += epic.versions[version].storyPoints.total;
+									versions[version].storyPoints.completed += epic.versions[version].storyPoints.completed;
+									if (versions[version].storyPoints.total > 0) versions[version].storyPoints.progress = Math.round((versions[version].storyPoints.completed * 100) / versions[version].storyPoints.total);
+									
+									versions[version].workHours.total += epic.versions[version].workHours.total;
+									versions[version].workHours.completed += epic.versions[version].workHours.completed;
+									if (versions[version].workHours.total > 0) versions[version].workHours.progress = Math.round((versions[version].workHours.completed * 100) / versions[version].workHours.total);
+								}
+								
+								epic.fields.components.forEach(function(component) {
+									if (!versions[version].components) versions[version].components = {};
+									if (!versions[version].components[component.name]) {
+										versions[version].components[component.name] = _.cloneDeep(epic.versions[version]);
+									}
+									else {
+										versions[version].components[component.name].storyPoints.total += epic.versions[version].storyPoints.total;
+										versions[version].components[component.name].storyPoints.completed += epic.versions[version].storyPoints.completed;
+										if (versions[version].components[component.name].storyPoints.total > 0) {
+											versions[version].components[component.name].storyPoints.progress = Math.round((versions[version].components[component.name].storyPoints.completed * 100) / versions[version].components[component.name].storyPoints.total);
+										}
+										
+										versions[version].components[component.name].workHours.total += epic.versions[version].workHours.total;
+										versions[version].components[component.name].workHours.completed += epic.versions[version].workHours.completed;
+										if (versions[version].components[component.name].workHours.total > 0) {
+											versions[version].components[component.name].workHours.progress = Math.round((versions[version].components[component.name].workHours.completed * 100) / versions[version].components[component.name].workHours.total);
+										}
+									}
+								});
+							}
+						});
+						
+						console.log(epics);
+						refresh();
+					}).catch(function(error) {
+						console.log(error);
+					});
+				});
+			});
+       
+		</script>
+	</body>
+</html>
