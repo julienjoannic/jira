@@ -185,7 +185,7 @@
 										epics[i].versions[fixVersion.name].storyPoints.progress = Math.round(epics[i].versions[fixVersion.name].storyPoints.completed * 100 / epics[i].versions[fixVersion.name].storyPoints.total);
 									}
 									
-									epics[i].versions[fixVersion.name].workHours.total += Math.round(story.fields.aggregatetimeestimate / 3600);
+									epics[i].versions[fixVersion.name].workHours.total += Math.round(story.fields.aggregateprogress.total / 3600);
 									epics[i].versions[fixVersion.name].workHours.completed += Math.round(story.fields.aggregateprogress.progress / 3600);
 									if (epics[i].versions[fixVersion.name].workHours.total > 0) {
 										epics[i].versions[fixVersion.name].workHours.progress = Math.round(epics[i].versions[fixVersion.name].workHours.completed * 100 / epics[i].versions[fixVersion.name].workHours.total);
