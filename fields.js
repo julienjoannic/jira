@@ -20,7 +20,7 @@ AJS.$(document).ready(function($){
 				placeholder: "Composant SAP",
 				minimumInputLength: 2,
 				ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
-					url: "https://calloss.neo-technologies.ch/sap/neotech/jira/components",
+					url: "https://sm-comp.neo-technologies.ch/sap/neotech/jira/components",
 					dataType: 'json',
 					quietMillis: 250,
 					data: function (term, page) {
